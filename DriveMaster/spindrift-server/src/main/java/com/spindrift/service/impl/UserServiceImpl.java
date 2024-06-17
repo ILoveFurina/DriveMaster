@@ -6,10 +6,19 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.spindrift.dto.UserLoginDTO;
+import com.spindrift.dto.UserRegisterDTO;
 import com.spindrift.entity.User;
+import com.spindrift.exception.PasswordErrorException;
+import com.spindrift.exception.UsernameExistsException;
+import com.spindrift.exception.UsernameNotFoundException;
 import com.spindrift.mapper.UserMapper;
 import com.spindrift.service.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
+
+import java.time.LocalDateTime;
 
 /**
  * ClassName: UserServiceImpl
@@ -22,8 +31,12 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
+
+
+    UserMapper userMapper;
 
     @Override
     public void login(UserLoginDTO userLoginDTO) {
@@ -32,8 +45,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         User user = getOne(wrapper);
         if(user == null){
-            throw new RuntimeException("用户名或密码错误");
+            throw new UsernameNotFoundException("用户名不存在");
+        }
+        String password = DigestUtils.md5DigestAsHex(userLoginDTO.getPassword().getBytes());
+        if(!user.getPassword().equals(password)){
+            throw new PasswordErrorException("密码错误");
         }
         StpUtil.login(user.getId());
+    }
+
+    @Override
+    public void register(UserRegisterDTO userRegisterDTO) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getUsername,userRegisterDTO.getUsername());
+
+        User user = getOne(wrapper);
+        if(user != null){
+            throw new UsernameExistsException("该用户名已存在");
+        }
+        user = new User();
+        userRegisterDTO.setPassword(DigestUtils.md5DigestAsHex(userRegisterDTO.getPassword().getBytes()));
+        BeanUtils.copyProperties(userRegisterDTO,user);
+        user.setCreateTime(LocalDateTime.now());
+        userMapper.insert(user);
     }
 }

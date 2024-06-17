@@ -32,6 +32,7 @@
         <lombok.version>1.18.32</lombok.version>
         <druid.version>1.2.21</druid.version>
         <jdbc.version>8.3.0</jdbc.version>
+        <spring.test.version>3.2.2</spring.test.version>
     </properties>
 
     <!-- 统一版本管理 bom -->
@@ -42,6 +43,12 @@
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-spring-boot3-starter</artifactId>
                 <version>${sa-token.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.test.version}</version>
             </dependency>
 
             <dependency>

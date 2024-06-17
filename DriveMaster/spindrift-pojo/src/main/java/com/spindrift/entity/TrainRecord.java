@@ -13,6 +13,9 @@ import lombok.*;
  */
 @TableName("train") // 指定表名
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TrainRecord {
 
     /**

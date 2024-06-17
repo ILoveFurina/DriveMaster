@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
  */
 @TableName("user") // 指定数据库中的表名
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     /**

@@ -1,13 +1,18 @@
 package com.spindrift.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
 import com.spindrift.dto.UserLoginDTO;
+import com.spindrift.dto.UserRegisterDTO;
 import com.spindrift.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ClassName: UserController
@@ -33,7 +38,20 @@ public class UserController {
     public SaResult login (@RequestBody UserLoginDTO userLoginDTO){
         log.info("用户登录:{}", userLoginDTO);
         userService.login(userLoginDTO);
-        return SaResult.ok();
+        return SaResult.ok("登录成功");
     }
 
+    @PostMapping("/register")
+    public SaResult register(@RequestBody UserRegisterDTO userRegisterDTO){
+        log.info("用户注册:{}",userRegisterDTO);
+        userService.register(userRegisterDTO);
+        return SaResult.ok("注册成功");
+    }
+    // http://localhost:8080/admin/user/isLogin
+    @GetMapping("/isLogin")
+    public SaResult isLogin(){
+        Map<String, Object> data = new HashMap<>();
+        data.put("status", StpUtil.isLogin());
+        return SaResult.data(data);
+    }
 }

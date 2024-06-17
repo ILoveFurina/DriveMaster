@@ -11,6 +11,9 @@ import lombok.*;
  */
 @TableName("graduation") // 指定表名
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Graduation {
 
     /**
