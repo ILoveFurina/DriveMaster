@@ -24,4 +24,6 @@ public class UserRegisterDTO {
     @Schema(description = "密码")
     String password;
 
+    @Schema(description = "手机号")
+    String phone;
 }

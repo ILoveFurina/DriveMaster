@@ -44,12 +44,6 @@ public class Student {
     private String idCard;
 
     /**
-     * 身份证图片地址
-     */
-    @TableField("id_card_image")
-    private String idCardImage;
-
-    /**
      * 手机号
      */
     @TableField("phone")
@@ -68,10 +62,10 @@ public class Student {
     private Integer applyType;
 
     /**
-     * 教练ID
+     * 教练姓名
      */
-    @TableField("coach_id")
-    private Long coachId;
+    @TableField("coach_name")
+    private String coachName;
 
     /**
      * 创建时间

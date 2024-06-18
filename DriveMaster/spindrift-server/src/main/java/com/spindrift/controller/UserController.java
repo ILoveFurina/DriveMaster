@@ -2,10 +2,14 @@ package com.spindrift.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.spindrift.dto.CommentDTO;
 import com.spindrift.dto.UserLoginDTO;
 import com.spindrift.dto.UserRegisterDTO;
+import com.spindrift.entity.User;
 import com.spindrift.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -27,7 +31,6 @@ import java.util.Map;
 @RequestMapping("admin/user")
 @RestController
 @AllArgsConstructor
-@CrossOrigin
 @Slf4j
 public class UserController {
 
@@ -54,4 +57,15 @@ public class UserController {
         data.put("status", StpUtil.isLogin());
         return SaResult.data(data);
     }
+
+    @GetMapping()
+    public SaResult getByUsername(String username){
+        User user = userService.getOne(new QueryWrapper<User>().eq("username", username));
+        Map<String, String> map = new HashMap();
+        map.put("user", user.getUsername());
+        return SaResult.data(map);
+    }
+
+
+
 }

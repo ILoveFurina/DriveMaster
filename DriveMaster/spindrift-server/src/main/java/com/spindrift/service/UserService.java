@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  * @Create 2024/6/16 10:37
  * @Version 1.0
  */
-@Service
+
 public interface UserService extends IService<User> {
 
     /**
