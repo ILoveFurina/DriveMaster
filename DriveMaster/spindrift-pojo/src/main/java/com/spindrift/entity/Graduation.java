@@ -26,7 +26,7 @@ public class Graduation {
      * 学生ID
      */
     @TableField("student_id")
-    private Integer studentId;
+    private Long studentId;
 
     /**
      * 学生姓名
