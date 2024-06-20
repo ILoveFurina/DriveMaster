@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -55,6 +56,7 @@ public class StudentServiceImpl  extends ServiceImpl<StudentMapper, Student> imp
         studentMapper.deleteById(id);
     }
 
+    @Transactional
     @Override
     public void update(StudentDTO studentDTO) {
         Student student = studentMapper.selectById(studentDTO.getId());

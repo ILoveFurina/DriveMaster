@@ -16,6 +16,7 @@ import com.spindrift.service.GraduationService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -49,7 +50,7 @@ public class GraduationServiceImpl extends ServiceImpl<GraduationMapper, Graduat
     public void delete(Long id) {
         graduationMapper.delete(new QueryWrapper<Graduation>().eq("id","student_id"));
     }
-
+    @Transactional
     @Override
     public void updateRecord(GraduationDTO graduationDTO) {
         Graduation graduation = getById(graduationDTO.getId());

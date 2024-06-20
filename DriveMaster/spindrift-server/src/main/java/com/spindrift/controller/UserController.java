@@ -66,6 +66,10 @@ public class UserController {
         return SaResult.data(map);
     }
 
-
+    @GetMapping("/logout")
+    public SaResult logout(){
+        StpUtil.logout();
+        return SaResult.ok();
+    }
 
 }
