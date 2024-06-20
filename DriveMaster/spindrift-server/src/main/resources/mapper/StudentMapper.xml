@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 接口的全限定符 -->
+<mapper namespace="com.spindrift.mapper.StudentMapper">
+
+    <insert id="insertRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into student(student_id,name,id_card,phone,address,apply_type,coach_name,create_time)
+        values(#{student_id},#{name},#{idCard},#{phone},#{address},#{applyType},#{coachName},#{create_time})
+    </insert>
+</mapper>

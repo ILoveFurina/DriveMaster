@@ -10,6 +10,7 @@ import com.spindrift.exception.StudentNotFoundException;
 import com.spindrift.mapper.StudentMapper;
 import com.spindrift.result.PageResult;
 import com.spindrift.service.StudentService;
+import com.spindrift.utils.IdUtils;
 import com.spindrift.vo.StudentVO;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -37,15 +38,16 @@ public class StudentServiceImpl  extends ServiceImpl<StudentMapper, Student> imp
 
     @Override
     public void add(StudentDTO studentDTO) {
+        //先插入不带有学员编号的student
         Student student = new Student();
         BeanUtils.copyProperties(studentDTO,student);
         student.setCreateTime(LocalDateTime.now());
-
-        Long maxId = studentMapper.selectMaxId();
-        String studentId = generateStudentId(maxId);
-        student.setStudentId(studentId);
-
         studentMapper.insert(student);
+        //插入之后，mybatis-plus会自动回显主键，给原来的实体类！！
+        String studentId = IdUtils.generateStudentId(student.getId());
+        student.setStudentId(studentId);
+        studentMapper.updateById(student);
+
     }
 
     @Override
@@ -71,21 +73,10 @@ public class StudentServiceImpl  extends ServiceImpl<StudentMapper, Student> imp
 
     @Override
     public void isStudentExists(String studentId) {
-        Long id = extractNumber(studentId);
+        Long id = IdUtils.extractStudentId(studentId);
         if (studentMapper.selectById(id) == null) {
             throw new StudentNotFoundException("该学员不存在,请确认学员编号");
         }
     }
 
-    public String generateStudentId(Long maxId) {
-        if (maxId == null) {
-            return "XY000001";
-        }
-        maxId++;
-        String newId = String.format("XY%06d", maxId);
-        return newId;
-    }
-    public Long extractNumber(String text) {
-        return Long.parseLong(text.replaceFirst("^XY0+", ""));
-    }
 }

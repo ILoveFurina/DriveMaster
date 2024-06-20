@@ -2,6 +2,7 @@ package com.spindrift.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.spindrift.entity.Student;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -19,4 +20,9 @@ public interface StudentMapper extends BaseMapper<Student> {
 
     @Select("select MAX(id) AS id from student")
     Long selectMaxId();
+
+
+    void insertRecord(Student student);
+
+    void selectById();
 }
