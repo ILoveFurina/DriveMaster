@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.spindrift.dto.StudentDTO;
 import com.spindrift.dto.StudentPageQueryDTO;
 import com.spindrift.entity.Student;
+import com.spindrift.exception.StudentNotFoundException;
 import com.spindrift.mapper.StudentMapper;
 import com.spindrift.result.PageResult;
 import com.spindrift.service.StudentService;
@@ -68,17 +69,23 @@ public class StudentServiceImpl  extends ServiceImpl<StudentMapper, Student> imp
         return new PageResult<>(studentPage.getTotal(), studentPage.getRecords());
     }
 
-    public String generateStudentId(Long maxId) {
+    @Override
+    public void isStudentExists(String studentId) {
+        Long id = extractNumber(studentId);
+        if (studentMapper.selectById(id) == null) {
+            throw new StudentNotFoundException("该学员不存在,请确认学员编号");
+        }
+    }
 
+    public String generateStudentId(Long maxId) {
         if (maxId == null) {
             return "XY000001";
         }
-
         maxId++;
         String newId = String.format("XY%06d", maxId);
-
         return newId;
     }
-
-
+    public Long extractNumber(String text) {
+        return Long.parseLong(text.replaceFirst("^XY0+", ""));
+    }
 }

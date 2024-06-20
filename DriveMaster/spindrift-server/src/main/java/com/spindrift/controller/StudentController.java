@@ -7,6 +7,7 @@ import com.spindrift.entity.Student;
 import com.spindrift.result.PageResult;
 import com.spindrift.service.StudentService;
 import com.spindrift.vo.StudentVO;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -59,6 +60,12 @@ public class StudentController {
         return SaResult.data(page);
     }
 
-
+    @Operation(summary = "查询单个学员是否存在")
+    @GetMapping()
+    public SaResult  isStudentExists(String studentId) {
+        log.info("查询单个学员:{}", studentId);
+        studentService.isStudentExists(studentId);
+        return SaResult.ok();
+    }
 
 }

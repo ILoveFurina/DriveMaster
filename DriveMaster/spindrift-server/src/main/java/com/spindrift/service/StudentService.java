@@ -42,4 +42,6 @@ public interface StudentService extends IService<Student> {
      * @return
      */
     PageResult<Student> pageQuery(StudentPageQueryDTO studentPageQueryDTO);
+
+    void isStudentExists(String studentId);
 }
