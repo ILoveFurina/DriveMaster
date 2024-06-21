@@ -22,13 +22,13 @@ public class User {
     private Long id;
 
     /**
-     * 用户姓名
+     * 用户名
      */
     @TableField("name")
     private String name;
 
     /**
-     * 用户名
+     * 账号
      */
     @TableField("username")
     private String username;

@@ -4,7 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.spindrift.dto.UserLoginDTO;
 import com.spindrift.dto.UserRegisterDTO;
 import com.spindrift.entity.User;
-import org.springframework.stereotype.Service;
+import com.spindrift.vo.LoginVO;
+import com.spindrift.dto.RecallPwdDTO;
 
 /**
  * ClassName: UserService
@@ -22,11 +23,17 @@ public interface UserService extends IService<User> {
      * 用户登录
      * @param userLoginDTO
      */
-    void login(UserLoginDTO userLoginDTO);
+    LoginVO login(UserLoginDTO userLoginDTO);
 
     /**
      * 用户注册
      * @param userRegisterDTO
      */
     void register(UserRegisterDTO userRegisterDTO);
+
+    void recall(RecallPwdDTO recallPwdDTO);
+
+    void checkUserExists(String user);
+
+    void checkUsernameExists(String user);
 }

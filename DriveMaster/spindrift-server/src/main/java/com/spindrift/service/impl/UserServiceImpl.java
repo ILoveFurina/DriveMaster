@@ -2,17 +2,18 @@ package com.spindrift.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.spindrift.dto.UserLoginDTO;
 import com.spindrift.dto.UserRegisterDTO;
 import com.spindrift.entity.User;
+import com.spindrift.exception.NameExistsException;
 import com.spindrift.exception.PasswordErrorException;
 import com.spindrift.exception.UsernameExistsException;
 import com.spindrift.exception.UsernameNotFoundException;
 import com.spindrift.mapper.UserMapper;
 import com.spindrift.service.UserService;
+import com.spindrift.vo.LoginVO;
+import com.spindrift.dto.RecallPwdDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     UserMapper userMapper;
 
     @Override
-    public void login(UserLoginDTO userLoginDTO) {
+    public LoginVO login(UserLoginDTO userLoginDTO) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUsername,userLoginDTO.getUsername());
 
@@ -52,6 +53,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new PasswordErrorException("密码错误");
         }
         StpUtil.login(user.getId());
+        LoginVO loginVO = new LoginVO();
+        BeanUtils.copyProperties(user,loginVO);
+        return loginVO;
     }
 
     @Override
@@ -68,5 +72,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         BeanUtils.copyProperties(userRegisterDTO,user);
         user.setCreateTime(LocalDateTime.now());
         userMapper.insert(user);
+    }
+
+    @Override
+    public void recall(RecallPwdDTO recallPwdDTO) {
+        User user = userMapper.selectById(recallPwdDTO.getId());
+        if(!user.getPassword().equals(DigestUtils.md5DigestAsHex(recallPwdDTO.getOldPassword().getBytes()))){
+            throw new PasswordErrorException("当前密码错误");
+        }
+        user.setPassword(DigestUtils.md5DigestAsHex(recallPwdDTO.getNewPassword().getBytes()));
+        userMapper.updateById(user);
+    }
+
+    @Override
+    public void checkUserExists(String name) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getName,name);
+        if(getOne(wrapper) != null){
+            throw new NameExistsException("该用户名已存在");
+        }
+    }
+
+    @Override
+    public void checkUsernameExists(String username) {
+
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getUsername,username);
+        if(getOne(wrapper) != null){
+            throw new UsernameNotFoundException("账号已存在");
+        }
     }
 }
